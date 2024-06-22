@@ -2,15 +2,20 @@
 import express , {response} from 'express'
 import dotenv from "dotenv"
 import cors from 'cors'
-import mongoose from 'mongoose'
-import {upload} from './middlewares/multer.middlewares.js'
-import {uploadOnCloudinary} from './utils/cloudinary.js'
+import userRouter from './routes/userRoute.js'
 
 dotenv.config({
-    path:'./env'
+    path:'./.env'
 })
 
 const app=express();
+
+app.use(cors())
+
+
+
+//routes
+app.use('/api/user',userRouter)
 
 // below we are creating route
 app.get('/', (req,res)=>{
@@ -18,33 +23,11 @@ app.get('/', (req,res)=>{
     return res.status(234).send('welocme')
 })
 
-app.use(cors())
+
+
 app.listen(process.env.PORT || 5000, ()=>{
     console.log(`Server is running at port : ${process.env.PORT}`);
 })
-
-// connecting to database
-const DB_NAME ="DreamFundedWebsite"
-mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`)
-.then(()=>{
-    console.log("Database connected successfully");
-    
-
-})
-.catch((error)=>{
-    console.log("mongodb connection error" ,error);
-});
-
-// uploading photo on cloudinary
-app.post('/',upload.single('photo'),async (req,res)=>{
-    console.log(req.file.path)
-    const uploadResult = await uploadOnCloudinary(req.file.path);
-    res.json({
-        url: uploadResult.url
-    })
-
-})
-
 
 
 
