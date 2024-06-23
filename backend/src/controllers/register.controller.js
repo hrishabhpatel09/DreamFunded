@@ -4,10 +4,10 @@ import { User } from '../models/userSchema.js'
 import {generateOtp} from '../utils/basicUtils.js'
 import fs from 'fs'
 
-export const handleRegister = async(req,res) =>{
+export const registerUser = async(req,res) =>{
     try {
         const {username, email, password} = req.body
-        if(!username || !email || !password)return res.status(400).json(new ApiResponse('Missing fields is required field',{}))
+        if(!username || !email || !password)return res.status(400).json(new ApiResponse('username,email & password is required',{}))
         let avatarImage = "";
         if(req.file){
             const response = await uploadOnCloudinary(req.file.path);
@@ -15,6 +15,7 @@ export const handleRegister = async(req,res) =>{
                 avatarImage = response.url
                 fs.unlinkSync(req.file.path)
             }else{
+                fs.unlinkSync(req.file.path)
                 res.status(503).json(new ApiResponse('Failed to Upload Avtar on Cloudinary',{}))
             }
         }

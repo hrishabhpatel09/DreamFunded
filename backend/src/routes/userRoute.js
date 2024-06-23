@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import {handleRegister} from '../controllers/index.js'
+import {registerUser} from '../controllers/index.js'
 import { upload } from '../middlewares/multer.middlewares.js'
 
 const router = Router()
@@ -8,6 +8,6 @@ const router = Router()
 router.get('/',(req,res)=>{
     res.send("HII")
 })
-router.post('/register',upload.single('avatarImage'),handleRegister)
+router.post('/register',upload.single('avatarImage'),registerUser)
 
 export default router

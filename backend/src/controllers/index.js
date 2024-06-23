@@ -1,6 +1,6 @@
-import { handleRegister } from "./register.controller.js";
+import { registerUser } from "./register.controller.js";
 
 
 export {
-    handleRegister
+   registerUser
 }
