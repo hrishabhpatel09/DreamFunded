@@ -9,6 +9,10 @@ export const registerUser = async(req,res) =>{
     try {
         const {username, email, password} = req.body
         if(!username || !email || !password)return res.status(400).json(new ApiResponse('username,email & password is required',{}))
+        const existingUser = await User.findOne({
+              email: email    
+        })
+        if(existingUser) return res.status(400).json(new ApiResponse('Email already in Use',{}))
         let avatarImage = "";
         if(req.file){
             const response = await uploadOnCloudinary(req.file.path);
