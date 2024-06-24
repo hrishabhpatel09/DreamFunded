@@ -2,6 +2,7 @@ import {ApiResponse} from '../utils/ApiResponse.js'
 import {uploadOnCloudinary} from '../utils/cloudinary.js'
 import { User } from '../models/userSchema.js'
 import {generateOtp} from '../utils/basicUtils.js'
+import {sendEmail} from '../utils/nodemailer.js'
 import fs from 'fs'
 
 export const registerUser = async(req,res) =>{
@@ -32,6 +33,7 @@ export const registerUser = async(req,res) =>{
         if(!response){
             res.status(500).json(new ApiResponse('Failed to register user',{data: 'none'}))
         }
+        await sendEmail({to: newUser.email,type: "verify",code :Number(newUser.otp)});
         res.status(200).json(new ApiResponse('User Saved Successfully',{username: response.username,email: response.email, avatarImage: response.avatarImage}))
     } catch (error) {
         console.log('Unable to register User')
