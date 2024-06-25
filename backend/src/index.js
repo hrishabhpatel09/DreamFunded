@@ -3,7 +3,7 @@ import dotenv from "dotenv"
 import cors from 'cors'
 import userRouter from './routes/userRoute.js'
 import connectDB from './db/index.js'
-
+import cookieParser from "cookie-parser"
 
 dotenv.config({
     path:'./.env'
@@ -11,8 +11,15 @@ dotenv.config({
 
 const app=express();
 
-app.use(cors())
+app.use(cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials:true
+}))
 
+app.use(express.json())// accept data in json and form
+app.use(express.urlencoded({extended:true, limit:"16kb"}))// accept url  
+app.use(express.static("public"))// used to save some images, favicon if needed in public folder
+app.use(cookieParser())
 
 
 //routes
