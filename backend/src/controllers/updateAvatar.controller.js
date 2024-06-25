@@ -3,6 +3,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import fs from 'fs';
 
 export const updateUserAvatar = asyncHandler(async(req,res)=>{
     const avatarLocalPath=req.file?.path 
@@ -26,7 +27,7 @@ export const updateUserAvatar = asyncHandler(async(req,res)=>{
         }
     }, {new:true}
  ).select("-password")
-
+ fs.unlinkSync(avatarLocalPath)
  return res
  .status(200)
  .json(
