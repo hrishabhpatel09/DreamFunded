@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken"
 import { User } from "../models/userSchema.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
-import { generateAccessAndRefreshTokens } from "./genAccess&RefreshTokenController.js"
+import { generateAccessAndRefreshTokens } from "./genAccess&RefreshToken.controller.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 
 
