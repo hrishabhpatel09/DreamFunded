@@ -32,6 +32,12 @@ const userSchema = new Schema ({
         type: Date,
         default: new Date(Date.now()+3600000)
     },
+    forgetPasswordOtp:{
+        type: String,
+    },
+    forgetPasswordOtpExpiry:{
+        type: Date,
+    },
     refreshToken:{
         type: String,
     },
