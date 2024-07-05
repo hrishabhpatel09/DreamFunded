@@ -15,7 +15,9 @@ export async function forgetPasswordHandler(req, res) {
       $or: [{ email: id }, { username: id }],
     });
     if (!existingUser)
-      return res.status(404).json(new ApiError(404, "User not Found"));
+      return res
+        .status(404)
+        .json(new ApiResponse("User not found", { success: false }));
     existingUser.forgetPasswordOtp = generateOtp();
     existingUser.forgetPasswordOtpExpiry = new Date(Date.now() + 3600000);
     await existingUser.save();
@@ -55,28 +57,25 @@ export async function forgetPasswordVerifyAndSetNewPassword(req, res) {
     const currDate = new Date(Date.now());
     const isOtpValid = existingUser.forgetPasswordOtpExpiry > currDate;
     if (!isOtpValid)
-      return res
-        .status(200)
-        .json(
-          new ApiResponse("Otp has been Expired please try Again", {
-            success: false,
-          })
-        );
-    existingUser.password = newPassword;
-    await existingUser.save();
-    return res
-      .status(200)
-      .json(
-        new ApiResponse("Password changed successfully", {
-          username: existingUser.username,
-          email: existingUser.email,
+      return res.status(200).json(
+        new ApiResponse("Otp has been Expired please try Again", {
+          success: false,
         })
       );
+    existingUser.password = newPassword;
+    existingUser.forgetPasswordOtp = "";
+    existingUser.forgetPasswordOtpExpiry = currDate;
+    await existingUser.save();
+    return res.status(200).json(
+      new ApiResponse("Password changed successfully", {
+        username: existingUser.username,
+        email: existingUser.email,
+        success: true,
+      })
+    );
   } catch (error) {
     return res
       .status(400)
       .json(new ApiError(400, "Something went wrong please try again", error));
   }
 }
-
-
