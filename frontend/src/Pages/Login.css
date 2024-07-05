@@ -1,0 +1,15 @@
+.container {
+  border-radius: 15px;
+  background: #e0e0e0;
+  box-shadow: inset -20px 20px 39px #bebebe, inset 20px -20px 39px #ffffff;
+}
+input {
+  border-radius: 19px;
+  background: linear-gradient(45deg, #f0f0f0, #cacaca);
+  box-shadow: 5px -5px 10px #bebebe, -5px 5px 10px #ffffff;
+}
+button {
+  border-radius: 19px;
+  background: linear-gradient(45deg, #f0f0f0, #cacaca);
+  box-shadow: 5px -5px 10px #bebebe, -5px 5px 10px #ffffff;
+}
