@@ -6,26 +6,20 @@ import "./Login.css";
 import { useDispatch } from "react-redux";
 import { login } from "../store/userSlice.js";
 
-const Login = () => {
+const Forget = () => {
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const handleClick = () => {
     toast.promise(
       new Promise(async (resolve, reject) => {
         try {
-          const response = await axios.post(
-            "http://localhost:8000/api/user/login",
-            { username, password },
-            { withCredentials: true }
+          const response = await axios.get(
+            `http://localhost:8000/api/user/forget/${username}`
           );
           if (!response) reject("Something Went Wrong");
           else {
-            const user = response.data.data.user;
-            dispatch(login(user));
-            navigate("/");
-            resolve();
+            navigate(`/forget/${username}/verify`)
+            resolve()
           }
         } catch (error) {
           reject(error);
@@ -33,7 +27,7 @@ const Login = () => {
       }),
       {
         loading: "Please Wait...",
-        success: "Logged In",
+        success: "Otp Sent Successfully",
         error: "Something Went Wrong",
       }
     );
@@ -45,35 +39,26 @@ const Login = () => {
         <div className="flex flex-col gap-4 items-center">
           <input
             type="text"
-            placeholder="username"
+            placeholder="username or email"
             className="border-black  h-10 w-80 rounded-md pl-2 outline-none"
             onChange={(e) => setUsername(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder="password"
-            className="border-black  h-10 w-80 rounded-md pl-2 outline-none "
-            onChange={(e) => setPassword(e.target.value)}
-          />
         </div>
-        <Link to={"/forget"} className="self-center mr-16 mt-2 text-blue-400">
-          Forgotten your password?
-        </Link>
         <button
           className="mt-8 bg-blue-500 px-4 py-2 text-black rounded-sm cursor-pointer"
           onClick={handleClick}
         >
-          Login
+          Send Otp
         </button>
       </div>
       <div className="shadow-md container h-[8vh] mt-4 border-r-2 flex items-center justify-center w-[90vw] sm:w-96">
-        <p className="mr-2">Don't have an account?</p>
-        <Link to={"/signup"} className="text-blue-500 font-semibold">
-          Sign up
+        <p className="mr-2">Click here to </p>
+        <Link to={"/login"} className="text-blue-500 font-semibold">
+          Login
         </Link>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Forget;

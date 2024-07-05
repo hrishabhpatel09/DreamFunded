@@ -1,8 +1,8 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
+import Navbar from "./Components/Navbar.jsx";
 import { logout } from "./store/userSlice";
 
 function App() {
@@ -15,9 +15,9 @@ function App() {
   };
   return (
     <>
-      <h1 className="bg-red-500">
-        {user?.username || "Please Login to continue"}
-      </h1>
+      <Navbar/>
+      <Outlet/>
+      <img src={user?.avatarImage} alt="avatr"  height={'20px'}/>
       <button className="mt-5 px-4 py-2" onClick={handleLogout}>
         Logout
       </button>
