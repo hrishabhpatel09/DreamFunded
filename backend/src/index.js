@@ -2,6 +2,7 @@ import express , {response} from 'express'
 import dotenv from "dotenv"
 import cors from 'cors'
 import userRouter from './routes/userRoute.js'
+import chatRouter from './routes/chatRoute.js'
 import connectDB from './db/index.js'
 import cookieParser from "cookie-parser"
 import {createServer} from 'http'
@@ -44,6 +45,7 @@ app.use(cookieParser())
 
 //routes
 app.use('/api/user',userRouter)
+app.use('/api/chat',chatRouter)
 
 // below we are creating route
 app.get('/', (req,res)=>{
