@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Link, Router, redirect, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import "./Login.css";
-import { useDispatch } from "react-redux";
-import { login } from "../store/userSlice.js";
+
 
 const Forget = () => {
   const [username, setUsername] = useState("");

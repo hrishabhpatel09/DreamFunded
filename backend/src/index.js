@@ -4,12 +4,32 @@ import cors from 'cors'
 import userRouter from './routes/userRoute.js'
 import connectDB from './db/index.js'
 import cookieParser from "cookie-parser"
+import {createServer} from 'http'
+import {Server} from 'socket.io'
 
 dotenv.config({
     path:'./.env'
 })
 
 const app=express();
+const server = createServer(app);
+const io = new Server(server,{cors: {origin: 'http://localhost:5173'}});
+
+let OnlineUser = [];
+io.on("connection",(socket)=>{
+        const newUser = {
+            sokcetId : socket.id,
+            username: socket.handshake.query.username
+        }
+        OnlineUser.push(newUser)
+        console.log(OnlineUser)
+        io.emit("Online",OnlineUser)
+    socket.on("disconnect",()=>{
+        OnlineUser = OnlineUser.filter((obj)=>obj.sokcetId!=socket.id)
+        io.emit("Online",OnlineUser)    
+    })
+})
+
 
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
@@ -33,7 +53,7 @@ app.get('/', (req,res)=>{
 
 
 
-app.listen(process.env.PORT || 5000, async()=>{
+server.listen(process.env.PORT || 5000, async()=>{
      await connectDB();
     console.log(`Server is running at port : ${process.env.PORT}`);
 })
