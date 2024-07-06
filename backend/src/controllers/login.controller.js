@@ -26,7 +26,7 @@ export const loginUser= asyncHandler(async(req,res)=>{
    }
 
 //    below line for email verification
-//    if(!user.isEmailVerified) { throw new ApiError(404, "User's email is not verified") }
+   if(!user.isEmailVerified) { return res.status(400).json(new ApiResponse("PLease Verify Your Email",{success: false})) }
    
 const {accessToken,refreshToken}=await generateAccessAndRefreshTokens(user._id)// since it may take time since we are saving info in db in this method 
 
