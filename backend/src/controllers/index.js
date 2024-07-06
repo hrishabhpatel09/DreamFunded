@@ -11,6 +11,8 @@ import { refreshAccessToken } from "./refreshAccessToken.controller.js";
 import { changeCurrentPassword } from "./changeCurrentPassword.js";
 import { updateAccountDetails } from "./updateAccountDetails.controller.js";
 import { updateUserAvatar } from "./updateAvatar.controller.js";
+import { makeGroup,joinGroup } from "./chat/group.controller.js";
+import { getUserGroups } from "./chat/getAllGroups.controller.js";
 
 export {
   registerUser,
@@ -24,4 +26,7 @@ export {
   changeCurrentPassword,
   updateAccountDetails,
   updateUserAvatar,
+  makeGroup,
+  getUserGroups,
+  joinGroup
 };

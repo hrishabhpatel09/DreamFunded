@@ -1,0 +1,36 @@
+import mongoose from "mongoose";
+import { Chat } from "../../models/chat.Schema.js";
+import { ApiResponse } from "../../utils/ApiResponse.js";
+
+const makeGroup = async function (req, res) {
+  const { name, admin } = req.body;
+  if (!name)
+    res.status(401).json(new ApiResponse("Please Provide a group Name"));
+  if (!admin) res.status(401).json(new ApiResponse("Please add admin"));
+  const adminId = new mongoose.Types.ObjectId(admin);
+  const newGrp = new Chat({
+    admin: adminId,
+    name: name,
+    participants: [adminId],
+  });
+  await newGrp.save();
+  res
+    .status(200)
+    .json(new ApiResponse("Group Created Successfully", { data: newGrp }));
+};
+
+const joinGroup = async function (req, res) {
+  const { groupId } = req.body;
+  const id = req.user.id;
+  if (!id) return res.json(new ApiResponse("Please Login First"));
+  if (!groupId) return res.json(new ApiResponse("Group Id is Required Field"));
+  const existingGroup = await Chat.findOne({_id: groupId});
+  if(!existingGroup) return res.json(new ApiResponse("Group Doesn't Exist"))
+  const newUser = new mongoose.Types.ObjectId(id);
+  existingGroup.participants.push(newUser);
+  const response = await existingGroup.save();
+  if(!response) return res.json(new ApiResponse("Something Went Wrong"))
+  return res.status(200).json(new ApiResponse("Added to Group SuccessFully",{sucess: true}))
+};
+
+export { makeGroup, joinGroup };
