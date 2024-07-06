@@ -20,7 +20,7 @@ import axios from "axios";
 import Forget from "./Pages/Forget.jsx";
 import ForgetVerify from "./Pages/ForgetVerify.jsx";
 import ProtectedRoute from "./middleware/protectedRoute.jsx";
-
+import ChatApp from './Pages/ChatApp.jsx'
 const router = createBrowserRouter([
   {
     path: "/",
@@ -39,14 +39,16 @@ const router = createBrowserRouter([
     path: "/forget/:id/verify",
     element: <ForgetVerify></ForgetVerify>,
   },
+  {
+    path:'/chat',
+    element: <ChatApp/>
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <RouterProvider router={router} />
       </PersistGate>
     </Provider>
-  </React.StrictMode>
 );

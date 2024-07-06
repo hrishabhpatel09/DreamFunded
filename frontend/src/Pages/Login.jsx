@@ -23,9 +23,11 @@ const Login = () => {
           if (!response) reject("Something Went Wrong");
           else {
             const user = response.data.data.user;
-            dispatch(login(user));
-            navigate("/");
             resolve();
+            setTimeout(()=>{
+              dispatch(login(user));
+              navigate("/");
+            },1000)
           }
         } catch (error) {
           reject(error);
