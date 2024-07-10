@@ -3,10 +3,12 @@ import dotenv from "dotenv"
 import cors from 'cors'
 import userRouter from './routes/userRoute.js'
 import chatRouter from './routes/chatRoute.js'
+import paymentRouter from './routes/paymentRoute.js'
 import connectDB from './db/index.js'
 import cookieParser from "cookie-parser"
 import {createServer} from 'http'
 import {Server} from 'socket.io'
+import {getUserGroupsId} from './controllers/chat/getAllGroups.controller.js'
 
 dotenv.config({
     path:'./.env'
@@ -16,24 +18,36 @@ const app=express();
 const server = createServer(app);
 const io = new Server(server,{cors: {origin: 'http://localhost:5173'}});
 
-let OnlineUser = [];
-io.on("connection",(socket)=>{
-        const newUser = {
-            sokcetId : socket.id,
-            username: socket.handshake.query.username
-        }
-        OnlineUser.push(newUser)
-        console.log(OnlineUser)
-        io.emit("Online",OnlineUser)
+
+io.on("connection",async(socket)=>{
+        const userGroups = await getUserGroupsId(socket.handshake.query.id);
+        userGroups.forEach((grp)=>{
+            socket.join(String(grp._id));
+        })
+
+        socket.on("message",(data)=>{
+            const newMessage = {
+                sender: data.id,
+                createdAt: data.time,
+                content: data.content
+            }
+            const newData = {
+                message: newMessage,
+                groupId: data.groupId
+            }
+            socket.to(data.groupId).emit("recieve",newData);
+        })
     socket.on("disconnect",()=>{
-        OnlineUser = OnlineUser.filter((obj)=>obj.sokcetId!=socket.id)
-        io.emit("Online",OnlineUser)    
+        userGroups.forEach((grp)=>{
+            socket.leave(String(grp._id));
+        })  
     })
+    
 })
 
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: [process.env.CORS_ORIGIN,'https://checkout.stripe.com'],
     credentials:true
 }))
 
@@ -46,6 +60,7 @@ app.use(cookieParser())
 //routes
 app.use('/api/user',userRouter)
 app.use('/api/chat',chatRouter)
+app.use('/api/payment',paymentRouter)
 
 // below we are creating route
 app.get('/', (req,res)=>{

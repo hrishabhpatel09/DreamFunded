@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { Chat } from "../../models/chat.Schema.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
+import { ChatMessage } from "../../models/chatMessage.Schema.js";
 
 const makeGroup = async function (req, res) {
   const { name, admin } = req.body;
@@ -33,4 +34,14 @@ const joinGroup = async function (req, res) {
   return res.status(200).json(new ApiResponse("Added to Group SuccessFully",{sucess: true}))
 };
 
-export { makeGroup, joinGroup };
+const sendMessage = async(req,res) =>{
+  const {message} = req.body;
+  const {groupId} = req.body;
+  const id = req.user.id;
+  if(!message) return res.status(404).json(new ApiResponse("Message is required Field",{sucess: false}))
+  const newMessage = new ChatMessage({sender: new mongoose.Types.ObjectId(id),chat: new mongoose.Types.ObjectId(groupId), content: message})
+  await newMessage.save();
+  return res.status(200).json(new ApiResponse("Message Sent SuccessFully",{sucess: true}));
+}
+
+export { makeGroup, joinGroup ,sendMessage};

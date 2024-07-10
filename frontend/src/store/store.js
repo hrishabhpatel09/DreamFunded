@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userSlice, { login } from "./userSlice.js";
 import { persistReducer } from "redux-persist";
 import persistStore from "redux-persist/es/persistStore.js";
