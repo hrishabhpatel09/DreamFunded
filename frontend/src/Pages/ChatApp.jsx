@@ -25,6 +25,7 @@ const ChatApp = () => {
   const messageBoxRef = useRef(null);
 
   useEffect(() => {
+    // setting socket
     socket.current = io("http://localhost:8000", {
       query: { username: user.username, id: user._id },
     });
@@ -41,7 +42,7 @@ const ChatApp = () => {
       dispatch(setGroup(result.data.data));
       socket.current.on("recieve", (data) => {
         console.log(data);
-        dispatch(addMessage({ id: data.groupId, message: data.message }));
+        dispatch(addMessage({ groupId: data.groupId, message: data.message }));
       });
     }
 
@@ -49,48 +50,64 @@ const ChatApp = () => {
       if (socket.current) {
         socket.current.off("Online");
       }
+      socket.current.on("recieve",()=>{})
     };
-  }, [socket.current]);
-
+  }, []);
+  
+  // changing current Chat and Group Store
   useEffect(() => {
     setMessages(chat?.messages);
     setGroupMembers(chat?.groupMembers);
-
+    const div = document.getElementById(chat?._id)
+    div.style.backgroundColor = "#e2e8f0 ";
+    console.log(div)
     return () => {
       setMessages([]);
+      setGroupMembers([]);
+      div.style.backgroundColor = "white"
     };
-  }, [chat,groups.messages]);
+  }, [chat]);
 
-  useEffect(()=>{
-    const id = chat?.id;
-    const object = groups.find((grp)=>grp._id == id)
-    setMessages(object?.messages)
-  },[groups])
-
+  // Function to scroll to the view where the last chat is
   useEffect(() => {
     if (messageBoxRef.current) {
       messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
     }
   }, [messages]);
 
+  // Listen for changes in groups and update local state
+  useEffect(() => {
+    const group = groups?.find(grp => grp?._id === chat?._id);
+    if (group) {
+      setMessages(group.messages);
+      setGroupMembers(group.groupMembers);
+    }
+  }, [groups]);
+  // Send Message Function
   const sendMessage = async () => {
-    // try {
-    //   const msg = newMessage;
-    //   setNewMessage("");
-    //   await axios.post(
-    //     "http://localhost:8000/api/chat/sendMessage",
-    //     { groupId: chat._id, message: msg },
-    //     { withCredentials: true }
-    //   );
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      const msg = newMessage;
+      setNewMessage("");
+      await axios.post(
+        "http://localhost:8000/api/chat/sendMessage",
+        { groupId: chat._id, message: msg },
+        { withCredentials: true }
+      );
+    } catch (error) {
+      console.log(error);
+    }
     const data = {
       id: user._id,
       time: new Date(Date.now()),
       content: newMessage,
       groupId: chat._id,
     };
+    const senderData = {
+      sender: user._id,
+      content: newMessage,
+      createdAt: new Date(Date.now())
+    }
+    dispatch(addMessage({groupId: chat._id, message: senderData}))
     socket.current.emit("message", data);
     setNewMessage("");
   };
@@ -102,16 +119,16 @@ const ChatApp = () => {
         <div className="col-start-1 col-span-1 bg-white ml-2 rounded-lg dark:bg-[#1f1f1f]">
           <div className="h-20 flex items-center pl-2 gap-2 dark:text-white">
             <img
-              src={user.avatarImage}
+              src={user?.avatarImage}
               alt="user_img"
               className="rounded-[50%] h-16 w-16"
             />
             <div>
-              <h2 className="font-semibold">{user.username}</h2>
+              <h2 className="font-semibold">{user?.username}</h2>
             </div>
           </div>
           {groups?.map((grp, idx) => (
-            <MessageBox key={idx} username={grp?.name} id={grp?._id} />
+            <MessageBox key={idx} username={grp?.name} id={grp?._id} lastMessage={grp.messages[(grp.messages.length) -1].content}/>
           ))}
         </div>
         <div className="bg-white col-span-4 rounded-md ml-1 grid grid-rows-12 overflow-hidden">
