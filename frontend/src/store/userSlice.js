@@ -22,9 +22,14 @@ const userSilce = createSlice({
       state.groups = action.payload;
     },
     addMessage: (state, action)=>{
-      state.groups.forEach((grp)=>{
-        if(grp._id == action.payload.id){
-          grp.messages.push(action.payload.message);
+      // groupId --> from action.payload
+      // message --> from action.message
+      state.groups = state.groups.map((group, idx)=>{
+        if(group._id == action.payload.groupId){
+          return group = {...group,messages: [...group.messages, action.payload.message]};
+        }
+        else{
+          return group;
         }
       })
     }
