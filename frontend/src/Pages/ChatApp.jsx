@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./ChatApp.css";
 import MessageBox from "../Components/MessageBox.jsx";
 import sampleAvatar from "../assets/images.png";
-import { useLoaderData } from "react-router-dom";
+import { NavLink, useLoaderData } from "react-router-dom";
 import axios from "axios";
 import SenderBox from "../Components/SenderBox.jsx";
 import RecievedBox from "../Components/RecievedBox.jsx";
@@ -28,9 +28,11 @@ const ChatApp = () => {
 
   useEffect(() => {
     // setting socket
-    socket.current = io("http://localhost:8000", {
-      query: { username: user?.username, id: user?._id },
-    });
+    if(user){
+      socket.current = io("http://localhost:8000", {
+        query: { username: user?.username, id: user?._id },
+      });
+    }
 
     return () => {
       if (socket.current) {
@@ -51,8 +53,8 @@ const ChatApp = () => {
     return () => {
       if (socket.current) {
         socket.current.off("Online");
+        socket.current.on("recieve",()=>{})
       }
-      socket.current.on("recieve",()=>{})
     };
   }, []);
   
