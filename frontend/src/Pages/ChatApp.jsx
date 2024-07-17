@@ -10,6 +10,7 @@ import axios from "axios";
 import SenderBox from "../Components/SenderBox.jsx";
 import RecievedBox from "../Components/RecievedBox.jsx";
 import { addMessage, setGroup } from "../store/userSlice.js";
+import recieveAudio from '../assets/recieve.mp3'
 
 const ChatApp = () => {
   const result = useLoaderData();
@@ -23,11 +24,12 @@ const ChatApp = () => {
   const [newMessage, setNewMessage] = useState("");
   const [groupMembers, setGroupMembers] = useState([]);
   const messageBoxRef = useRef(null);
+  const recieve = new Audio(recieveAudio)
 
   useEffect(() => {
     // setting socket
     socket.current = io("http://localhost:8000", {
-      query: { username: user.username, id: user._id },
+      query: { username: user?.username, id: user?._id },
     });
 
     return () => {
@@ -35,13 +37,13 @@ const ChatApp = () => {
         socket.current.disconnect();
       }
     };
-  }, [user.username]);
+  }, [user?.username]);
 
   useEffect(() => {
     if (socket.current) {
       dispatch(setGroup(result.data.data));
       socket.current.on("recieve", (data) => {
-        console.log(data);
+        recieve.play();
         dispatch(addMessage({ groupId: data.groupId, message: data.message }));
       });
     }
@@ -59,13 +61,14 @@ const ChatApp = () => {
     setMessages(chat?.messages);
     setGroupMembers(chat?.groupMembers);
     const div = document.getElementById(chat?._id)
-    div.style.backgroundColor = "#e2e8f0 ";
-    console.log(div)
+    if(div){
+      div.style.backgroundColor = "#e2e8f0 ";
     return () => {
       setMessages([]);
       setGroupMembers([]);
-      div.style.backgroundColor = "white"
+      div.style.backgroundColor = ""
     };
+    }
   }, [chat]);
 
   // Function to scroll to the view where the last chat is
@@ -114,9 +117,8 @@ const ChatApp = () => {
 
   return (
     <>
-      <Navbar />
       <div className="grid grid-cols-5 h-[94vh] gap-4 pt-4 dark:bg-[#1f1f1ff7]">
-        <div className="col-start-1 col-span-1 bg-white ml-2 rounded-lg dark:bg-[#1f1f1f]">
+        <div className="col-start-1 sm:col-span-1 bg-white ml-2 rounded-lg dark:bg-[#1f1f1f]">
           <div className="h-20 flex items-center pl-2 gap-2 dark:text-white">
             <img
               src={user?.avatarImage}
@@ -128,9 +130,10 @@ const ChatApp = () => {
             </div>
           </div>
           {groups?.map((grp, idx) => (
-            <MessageBox key={idx} username={grp?.name} id={grp?._id} lastMessage={grp.messages[(grp.messages.length) -1].content}/>
+            <MessageBox key={idx} username={grp?.name} id={grp?._id} lastMessage={grp?.messages?.[grp.messages.length - 1]?.content}/>
           ))}
         </div>
+        {/* // Message Box */}
         <div className="bg-white col-span-4 rounded-md ml-1 grid grid-rows-12 overflow-hidden">
           <div
             className="bg-white col-span-4 rounded-md rounded-b-none py-2 chat-area flex flex-col overflow-y-auto overflow-x-hidden row-start-1 row-span-11"
@@ -138,7 +141,7 @@ const ChatApp = () => {
           >
             {messages?.map((msg, idx) => {
               const obj = groupMembers.find((user) => user._id === msg.sender);
-              return msg.sender === user._id ? (
+              return msg.sender === user?._id ? (
                 <SenderBox
                   message={msg.content}
                   time={msg.createdAt}
@@ -161,6 +164,9 @@ const ChatApp = () => {
               className="h-12 ml-2 outline-none w-[1125px] pl-4 msg-box"
               placeholder="type message here ..."
               onChange={(e) => setNewMessage(e.target.value)}
+              onKeyDown={(e)=>{if(e.key=='Enter'){
+                sendMessage()
+              }}}
               value={newMessage}
             />
             <button

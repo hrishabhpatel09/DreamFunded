@@ -21,15 +21,33 @@ import Forget from "./Pages/Forget.jsx";
 import ForgetVerify from "./Pages/ForgetVerify.jsx";
 import ProtectedRoute from "./middleware/protectedRoute.jsx";
 import ChatApp from './Pages/ChatApp.jsx'
+import HomePage from "./Pages/HomePage.jsx";
+import SignUp from "./Pages/SignUp.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <App/>,
+    children: [
+      {
+        path: 'chat',
+        loader: async()=>{
+          return axios.get('http://localhost:8000/api/chat/getAllGroups',{withCredentials: true})
+        },
+        element: <ChatApp/>
+      },
+      {
+        path:'',
+        element: <HomePage/> 
+      }
+    ]
   },
   {
     path: "/login",
     element: <ProtectedRoute children={<Login />} to={"/"} />,
-    // element: <Login/>
+  },
+  {
+    path: "/register",
+    element: <SignUp/>
   },
   {
     path: "/forget",
@@ -38,13 +56,6 @@ const router = createBrowserRouter([
   {
     path: "/forget/:id/verify",
     element: <ForgetVerify></ForgetVerify>,
-  },
-  {
-    path:'/chat',
-    loader: async()=>{
-      return axios.get('http://localhost:8000/api/chat/getAllGroups',{withCredentials: true})
-    },
-    element: <ChatApp/>
   }
 ]);
 

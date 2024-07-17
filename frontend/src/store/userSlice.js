@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   user: null,
   chat: null,
-  groups: null
+  groups: null,
+  isOpen: false,
 };
 const userSilce = createSlice({
   name: "User",
@@ -14,6 +15,11 @@ const userSilce = createSlice({
     },
     logout: (state, action) => {
       state.user = null;
+      state.groups = null;
+      state.chat = null;
+    },
+    toggleDrawer: (state,action)=>{
+      state.isOpen = !(state.isOpen);
     },
     selectChat: (state, action) => {
       state.chat = action.payload;
@@ -36,5 +42,5 @@ const userSilce = createSlice({
   },
 });
 
-export const { login, logout,selectChat,setGroup,addMessage } = userSilce.actions;
+export const { login, logout,selectChat,setGroup,addMessage,toggleDrawer } = userSilce.actions;
 export default userSilce.reducer;

@@ -48,13 +48,13 @@ const Login = () => {
           <input
             type="text"
             placeholder="username"
-            className="border-black input  h-10 w-80 rounded-md pl-2 outline-none"
+            className="border-black input  h-10 w-72 rounded-md pl-2 outline-none"
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             type="password"
             placeholder="password"
-            className="border-black input h-10 w-80 rounded-md pl-2 outline-none "
+            className="border-black input h-10 w-72 rounded-md pl-2 outline-none "
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
@@ -62,7 +62,7 @@ const Login = () => {
           Forgotten your password?
         </Link>
         <button
-          className="mt-8 bg-blue-500 px-4 py-2 text-black cursor-pointer button"
+          className="sm:mt-8 mt-2 bg-blue-500 px-4 py-2 text-black cursor-pointer button"
           onClick={handleClick}
         >
           Login

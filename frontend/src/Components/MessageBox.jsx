@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import user from "../assets/images.png";
 import { useDispatch, useSelector } from "react-redux";
 import { selectChat } from "../store/userSlice.js";
-const MessageBox = ({ username, avatar, lastMessage, id }) => {
+const MessageBox = ({ username, avatar, lastMessage ="", id }) => {
   const dispatch = useDispatch();
   const chat = useSelector(state=>state.chat)
   const groups = useSelector(state=>state.groups)
@@ -34,7 +34,7 @@ const MessageBox = ({ username, avatar, lastMessage, id }) => {
         <h2 className="text-md text-gray-500 dark:text-white">
           {username || "username"}
         </h2>
-        <p className="text-sm text-gray-500">{lastMessage || "Last message"}</p>
+        <p className="text-sm text-gray-500 overflow-y-hidden  h-6">{lastMessage || ""}</p>
       </div>
     </div>
   );
