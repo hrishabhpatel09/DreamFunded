@@ -10,7 +10,7 @@ export async function uploadOnCloudinary(path) {
         return await cloudinary.uploader
         .upload(
             path, {
-                public_id: 'avatar',
+                public_id: 'avatar',       
             }
         )
     } catch (error) {
