@@ -31,7 +31,13 @@ const router = createBrowserRouter([
       {
         path: 'chat',
         loader: async()=>{
-          return axios.get('http://localhost:8000/api/chat/getAllGroups',{withCredentials: true})
+          
+            try {
+              return axios.get('http://localhost:8000/api/chat/getAllGroups',{withCredentials: true})
+            } catch (error) {
+              return error;
+            }
+          
         },
         element: <ChatApp/>
       },

@@ -55,7 +55,7 @@ const getAllMessages = async (req, res) => {
   const AllMessages = await Chat.aggregate([
     {
       $match: {
-        _id: new Types.ObjectId(groupId),
+        _id: new Types.ObjectId(groupId || ""),
       },
     },
     {
