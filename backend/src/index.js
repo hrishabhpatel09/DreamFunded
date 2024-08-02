@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser"
 import {createServer} from 'http'
 import {Server} from 'socket.io'
 import {getUserGroupsId} from './controllers/chat/getAllGroups.controller.js'
+import { uploadOnCloudinary } from './utils/cloudinary.js'
 
 dotenv.config({
     path:'./.env'
@@ -67,7 +68,11 @@ app.get('/', (req,res)=>{
     console.log(req);
     return res.status(234).send('welocme')
 })
-
+app.post("/",async(req,res)=>{
+    console.log("File recieved")
+    const result = await uploadOnCloudinary(req.body.url)
+    return res.json({url: result})
+  })
 
 
 server.listen(process.env.PORT || 5000, async()=>{

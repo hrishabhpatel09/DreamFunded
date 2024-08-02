@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { memo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { toggleDrawer } from "../store/userSlice.js";
@@ -33,7 +33,14 @@ const Navbar = () => {
           >
             Home
           </NavLink>
-          <li>Add a Project</li>
+          <NavLink
+            to={"/addProject"}
+            className={({ isActive }) => {
+              return isActive ? "font-semibold text-orange-500" : "";
+            }}
+          >
+            Add a Project
+          </NavLink>
           <li>My Projects</li>
           <NavLink
             to={"/chat"}
@@ -63,7 +70,10 @@ const Navbar = () => {
             <div className="border-b-2 border-black w-6 h-2 dark:border-white"></div>
           </div>
         ) : (
-          <button className="cancel-button sm:hidden w-10 flex items-center justify-left" onClick={handleDrawer}>
+          <button
+            className="cancel-button sm:hidden w-10 flex items-center justify-left"
+            onClick={handleDrawer}
+          >
             <span className="cross dark:text-white">&#10005;</span>
           </button>
         )}
@@ -72,4 +82,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default memo(Navbar);

@@ -23,6 +23,7 @@ import ProtectedRoute from "./middleware/protectedRoute.jsx";
 import ChatApp from './Pages/ChatApp.jsx'
 import HomePage from "./Pages/HomePage.jsx";
 import SignUp from "./Pages/SignUp.jsx";
+import Post from "./Pages/Post.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path:'',
         element: <HomePage/> 
+      },
+      {
+        path:'/addProject',
+        element: <Post/>
       }
     ]
   },
