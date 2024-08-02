@@ -13,7 +13,7 @@ const RecievedBox = ({ message, time, img, sender}) => {
       <div className="h-4 w-4 rounded-full bg-red-400 mr-1 flex-shrink-0 overflow-hidden">
         <img src={profile} alt="user_img"/>
       </div>
-      <span className="items-end bg-grey-700 bg-[#1f1f1f] text-gray-300 h-auto min-h-8 rounded-2xl px-2 text-left rounded-tl-none">
+      <span className="items-end bg-grey-700 bg-[#1f1f1f] text-gray-300 h-auto min-h-8 rounded-xl px-2 text-left rounded-tl-none">
         <span className="leading text-yellow-600 text-[13px]">{sender}</span>
         <br className="" />
         {message}

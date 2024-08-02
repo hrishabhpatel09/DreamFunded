@@ -8,8 +8,8 @@ const SenderBox = ({message, time}) => {
       };
     const localTime = date.toLocaleTimeString(undefined, options);
   return (
-    <div className='flex justify-end my-1 pr-1 text-pretty'>
-      <span className='items-end bg-green-700 text-white h-8 rounded-2xl rounded-tr-[0] px-2 text-center'>{message}<sub className='text-[10px] pl-1'>{localTime}</sub></span>
+    <div className='flex justify-end my-1 pr-1 text-pretty items-center'>
+      <span className='items-end bg-green-700 text-white h-8 rounded-xl rounded-tr-[0] px-2 text-center'>{message}<sub className='text-[10px] pl-1'>{localTime}</sub></span>
     </div>
   )
 }
